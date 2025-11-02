@@ -1,1 +1,1 @@
-![airbnb ERD](https://lucid.app/publicSegments/view/c8e81e5a-c397-4735-bb2f-f5230b7ee970/image.png)
+![airbnb ERD](./airbnb.png)
