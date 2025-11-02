@@ -1,1 +1,1 @@
-![airbnb ERD](https://lucid.app/lucidchart/ed786bf5-95aa-47c2-869a-7feff0954389/edit?view_items=Jnl5Tr-h~NFR&page=0_0&invitationId=inv_ecb48ccb-00dc-4b09-b46d-1d9caf614248)
+![airbnb ERD](https://lucid.app/publicSegments/view/c8e81e5a-c397-4735-bb2f-f5230b7ee970/image.png)
