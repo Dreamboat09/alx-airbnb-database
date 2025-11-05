@@ -1,1 +1,1 @@
-TABLE users
+# No data redundacy 
