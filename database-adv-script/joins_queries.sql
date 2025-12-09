@@ -11,7 +11,8 @@ SELECT
     reviews.*
 FROM properties
 LEFT JOIN reviews
-    ON reviews.property_id = properties.id;
+    ON reviews.property_id = properties.id
+ORDER BY properties.name ASC;
 
 
 SELECT 
