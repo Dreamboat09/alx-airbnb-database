@@ -13,3 +13,7 @@ Even if: A user has no booking, OR A booking has no valid user_id
 ## correlated and non-correlated subqueries 
 Non-correlated subquery → runs once, result reused
 Correlated subquery → runs once per row in the outer query
+
+## Apply Aggregations and Window Functions
+Write a query to find the total number of bookings made by each user, using the COUNT function and GROUP BY clause.
+Use a window function (ROW_NUMBER, RANK) to rank properties based on the total number of bookings they have received.
