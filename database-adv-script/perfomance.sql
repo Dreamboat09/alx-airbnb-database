@@ -74,6 +74,7 @@ JOIN users u ON b.user_id = u.id
 JOIN properties p ON b.property_id = p.id
 LEFT JOIN payments pay ON pay.booking_id = b.id
 WHERE b.status = 'confirmed'
+  AND b.created_at >= DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH)
 ORDER BY b.created_at DESC;
 
 -- =====================================
