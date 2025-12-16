@@ -31,3 +31,35 @@ CREATE INDEX idx_bookings_status ON bookings(status);
 -- Optimizes queries that filter by user and sort by creation time
 CREATE INDEX idx_bookings_user_created
 ON bookings(user_id, created_at);
+
+
+-- =====================================
+-- QUERY PERFORMANCE MEASUREMENT
+-- =====================================
+-- Use the following commands BEFORE and AFTER applying indexes
+-- to observe performance improvements.
+
+-- Example 1: Analyze bookings by user
+EXPLAIN ANALYZE
+SELECT *
+FROM bookings
+WHERE user_id = 5
+ORDER BY created_at DESC;
+
+-- Example 2: Analyze property booking aggregation
+EXPLAIN ANALYZE
+SELECT
+    property_id,
+    COUNT(*) AS total_bookings
+FROM bookings
+GROUP BY property_id
+ORDER BY total_bookings DESC;
+
+-- Example 3: Analyze user booking count
+EXPLAIN ANALYZE
+SELECT
+    u.id,
+    COUNT(b.id) AS booking_count
+FROM users u
+LEFT JOIN bookings b ON b.user_id = u.id
+GROUP BY u.id;
