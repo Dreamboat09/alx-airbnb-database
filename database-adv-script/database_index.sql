@@ -1,0 +1,33 @@
+-- =====================================
+-- Indexes for high-usage columns
+-- =====================================
+
+-- =============================
+-- USER TABLE INDEXES
+-- =============================
+-- Used frequently in WHERE clauses, JOINs, and authentication lookups
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_created_at ON users(created_at);
+
+-- =============================
+-- PROPERTY TABLE INDEXES
+-- =============================
+-- Used in JOINs with bookings and filtering properties by owner
+CREATE INDEX idx_properties_user_id ON properties(user_id);
+CREATE INDEX idx_properties_created_at ON properties(created_at);
+
+-- =============================
+-- BOOKING TABLE INDEXES
+-- =============================
+-- Used heavily in JOINs, WHERE filters, and ORDER BY clauses
+CREATE INDEX idx_bookings_user_id ON bookings(user_id);
+CREATE INDEX idx_bookings_property_id ON bookings(property_id);
+CREATE INDEX idx_bookings_created_at ON bookings(created_at);
+CREATE INDEX idx_bookings_status ON bookings(status);
+
+-- =============================
+-- COMPOSITE INDEX (Performance Boost)
+-- =============================
+-- Optimizes queries that filter by user and sort by creation time
+CREATE INDEX idx_bookings_user_created
+ON bookings(user_id, created_at);

@@ -1,33 +1,88 @@
--- =====================================
--- Indexes for high-usage columns
--- =====================================
+# Identify High-Usage Columns (Reasoning)
 
--- =============================
--- USER TABLE INDEXES
--- =============================
--- Used frequently in WHERE clauses, JOINs, and authentication lookups
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_created_at ON users(created_at);
+## Users table
+### Common usage:
+WHERE email = ? → login & authentication
+JOIN bookings ON users.id = bookings.user_id
+ORDER BY created_at
 
--- =============================
--- PROPERTY TABLE INDEXES
--- =============================
--- Used in JOINs with bookings and filtering properties by owner
-CREATE INDEX idx_properties_user_id ON properties(user_id);
-CREATE INDEX idx_properties_created_at ON properties(created_at);
+### High-usage columns:
+email
+id (already indexed as PRIMARY KEY)
+created_at
 
--- =============================
--- BOOKING TABLE INDEXES
--- =============================
--- Used heavily in JOINs, WHERE filters, and ORDER BY clauses
-CREATE INDEX idx_bookings_user_id ON bookings(user_id);
-CREATE INDEX idx_bookings_property_id ON bookings(property_id);
-CREATE INDEX idx_bookings_created_at ON bookings(created_at);
-CREATE INDEX idx_bookings_status ON bookings(status);
+## Properties table
+### Common usage:
+JOIN bookings ON properties.id = bookings.property_id
+WHERE user_id = ? (host → properties)
+ORDER BY created_at
 
--- =============================
--- COMPOSITE INDEX (Performance Boost)
--- =============================
--- Optimizes queries that filter by user and sort by creation time
-CREATE INDEX idx_bookings_user_created
-ON bookings(user_id, created_at);
+### High-usage columns:
+user_id
+created_at
+
+## Bookings table
+### Common usage:
+JOIN users ON bookings.user_id = users.id
+JOIN properties ON bookings.property_id = properties.id
+WHERE status = ?
+ORDER BY created_at
+Analytics queries (COUNT per user/property)
+
+### High-usage columns:
+user_id
+property_id
+status
+created_at
+(user_id, created_at) → composite index
+
+# Index Creation 
+You now have single-column + composite indexes saved in:
+
+These indexes:
+Speed up joins
+Reduce full table scans
+Improve ORDER BY performance
+Optimize analytics queries
+
+# Measure Performance (Before & After Indexing)
+### Example Query (Before Index)
+EXPLAIN
+SELECT *
+FROM bookings
+WHERE user_id = 5
+ORDER BY created_at DESC;
+
+### Before Index (Typical Output)
+type: ALL
+rows: large number
+Extra: Using filesort
+
+This means full table scan (slow).
+
+### After Index Applied
+EXPLAIN
+SELECT *
+FROM bookings
+WHERE user_id = 5
+ORDER BY created_at DESC;
+
+### After Index (Expected Output)
+type: ref
+key: idx_bookings_user_created
+rows: small number
+Extra: Using index
+
+This means indexed lookup (fast).
+
+#  Using ANALYZE (If Supported)
+ANALYZE
+SELECT *
+FROM bookings
+WHERE property_id = 10;
+
+
+This shows:
+Execution time
+Rows examined
+Actual performance cost
